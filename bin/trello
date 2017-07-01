@@ -56,7 +56,7 @@ function main(args) {
         .description('Adds a new card with the specified name')
         .option('-d, --description [desc]', 'the description of the card', null)
         .option('-p, --position [top/bottom]', 'position of the new card', 'top')
-        .option('-l, --labels', 'comma-separated list of labels to assign to the card (requires IDs, see show-labels command)')
+        .option('-l, --labels [labels]', 'comma-separated list of labels to assign to the card (requires IDs, see show-labels command)', null)
         .option('-f, --force', 'create board and list if they don\'t already exist')
         .action(card.add.bind(card));
 
@@ -67,9 +67,9 @@ function main(args) {
 
     program
         .command('card:move-all <board> <from> <to>')
-        .option('-b, --board [name]', 'destination board')
+        .option('-b, --board [name]', 'destination board', null)
         .description('Move all cards from one list to another')
-        .action(card.delete.bind(card));
+        .action(card.moveAll.bind(card));
 
     program
         .command('card:archive <id>')
@@ -99,14 +99,14 @@ function main(args) {
     program
         .command('card:move <id> <list>')
         .description('Move a card between lists')
-        .option('-b, --board [name]', 'move to a list on another board')
+        .option('-b, --board [name]', 'move to a list on another board', null)
         .option('-p, --position [top/bottom]', 'position of the new card', 'top')
         .action(card.move.bind(card));
 
     program
         .command('card:mine')
         .description('Show cards assigned to a user')
-        .option('-u, --user [name]', 'show for another user')
+        .option('-u, --user [name]', 'show for another user', null)
         .action(card.mine.bind(card));
 
     // Webhooks

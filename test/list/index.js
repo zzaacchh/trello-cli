@@ -39,7 +39,7 @@ describe("list", function() {
 
     [
       ["can set position", "p", "position", "bottom"],
-      ["can force list creation", "f", "force", true],
+      ["can force list creation", "f", "force", true]
     ].forEach(function(v) {
       it(
         `${v[0]} (-${v[1]})`,
