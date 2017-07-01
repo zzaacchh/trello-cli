@@ -1,0 +1,43 @@
+#!/usr/bin/env node
+
+const program = require('commander');
+
+function main(args) {
+    program
+        .version('0.5.0')
+        .option('-F, --format [format]', 'change the output format (default tsv)', 'tsv');
+
+    const board = require("../src/board/index");
+    program
+        .command('board:add <name>')
+        .description('Adds a new board with the specified name')
+        .option('-d, --description [desc]', 'the description of the board', null)
+        .option('-a, --ageing [on/off]', 'enable card aging', "off")
+        .option('-i, --images [on/off]', 'show images on cards', "on")
+        .action(board.add.bind(board));
+
+
+
+
+    // Output help by default if there is no subcommand
+    if (process.argv.slice(2).length === 0) {
+        program.outputHelp();
+        process.exit();
+    }
+
+    program.parse(args);
+
+    // Fix for memory leak when running tests
+    // MaxListenersExceededWarning: Possible EventEmitter memory leak detected.
+    // 11 version listeners added. Use emitter.setMaxListeners() to 
+    // increase limit
+    if (process.env.NODE_ENV === "test") {
+        program.removeListener("version", program.listeners("version")[0]);
+    }
+}
+
+if (require.main === module) {
+    main(process.argv);
+}
+
+module.exports = main;

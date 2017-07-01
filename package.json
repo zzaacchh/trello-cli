@@ -4,7 +4,9 @@
   "description": "Trello CLI tool",
   "main": "./bin/trello",
   "scripts": {
-    "test": "mocha test/* test/**/*"
+    "test": "NODE_ENV=test mocha test/* test/**/*",
+    "lint": "eslint src test",
+    "lint-fix": "eslint --fix src test"
   },
   "repository": {
     "type": "git",
@@ -23,8 +25,18 @@
   ],
   "license": "BSD",
   "devDependencies": {
+    "chai": "^4.0.2",
+    "eslint": "^4.1.1",
+    "eslint-config-prettier": "^2.3.0",
+    "eslint-plugin-prettier": "^2.1.2",
+    "mocha": "^3.4.2",
+    "prettier": "^1.5.2",
+    "sinon": "^2.3.6",
+    "sinon-chai": "^2.11.0",
+    "sinon-test": "^2.0.0"
   },
   "dependencies": {
+    "commander": "^2.10.0"
   },
   "bin": {
     "trello": "./bin/trello"

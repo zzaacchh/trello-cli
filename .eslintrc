@@ -7,7 +7,6 @@
         "prettier"
     ],
     "rules": {
-        "prettier/prettier": "error",
-        "curly": ["error", "all"]
+        "prettier/prettier": "error"
     }
 }
