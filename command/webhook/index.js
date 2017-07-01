@@ -1,6 +1,5 @@
 module.exports = {
   add: require("./add"),
-  close: require("./close"),
-  labels: require("./labels"),
+  delete: require("./delete"),
   show: require("./show")
 };

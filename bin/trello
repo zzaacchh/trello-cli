@@ -5,6 +5,7 @@ const program = require('commander');
 function main(args) {
     program
         .version('0.5.0')
+        .option('-n, --non-interactive', 'do not prompt for use interaction, assume yes', false)
         .option('-F, --format [format]', 'change the output format (default tsv)', 'tsv');
 
     // Boards
@@ -19,7 +20,7 @@ function main(args) {
 
     program
         .command('board:close <board>')
-        .description('Close all boards that match the specified text')
+        .description('Close all boards that match the name provided')
         .action(board.close.bind(board));
 
     program
@@ -28,6 +29,12 @@ function main(args) {
         .option('-c, --closed', 'show closed boards')
         .action(board.show.bind(board));
 
+    program
+        .command('board:labels <board>')
+        .description('Show the list of labels for a board')
+        .option('-c, --count', 'show the number of times each label has been used')
+        .action(board.labels.bind(board));
+
     // Lists
     const list = require("../command/list/index");
     program
@@ -35,15 +42,103 @@ function main(args) {
         .description('Adds a new board with the specified name')
         .option('-p, --position [top/bottom]', 'position of the new list', 'top')
         .option('-f, --force', 'create board if it doesn\'t already exist')
-        .action(list.add.bind(board));
+        .action(list.add.bind(list));
 
     program
-        .command('list:show <board> <list>')
-        .description('Show the list of cached boards')
-        .option('-c, --closed', 'show closed boards')
-        .action(list.show.bind(board));
+        .command('list:show <board>')
+        .description('Show the lists on a board')
+        .action(list.show.bind(list));
 
+    // Cards
+    const card = require("../command/card/index");
+    program
+        .command('card:add <board> <list> <title>')
+        .description('Adds a new card with the specified name')
+        .option('-d, --description [desc]', 'the description of the card', null)
+        .option('-p, --position [top/bottom]', 'position of the new card', 'top')
+        .option('-l, --labels', 'comma-separated list of labels to assign to the card (requires IDs, see show-labels command)')
+        .option('-f, --force', 'create board and list if they don\'t already exist')
+        .action(card.add.bind(card));
 
+    program
+        .command('card:show <board> <list>')
+        .description('List cards on a board')
+        .action(card.show.bind(card));
+
+    program
+        .command('card:move-all <board> <from> <to>')
+        .option('-b, --board [name]', 'destination board')
+        .description('Move all cards from one list to another')
+        .action(card.delete.bind(card));
+
+    program
+        .command('card:archive <id>')
+        .description('Archive a card')
+        .action(card.archive.bind(card));
+
+    program
+        .command('card:assign <id> <user>')
+        .description('Assign a user to a card')
+        .action(card.assign.bind(card));
+
+    program
+        .command('card:unassign <id> <user>')
+        .description('Remove a user from a card')
+        .action(card.unassign.bind(card));
+
+    program
+        .command('card:details <id>')
+        .description('Show a card\'s details')
+        .action(card.details.bind(card));
+
+    program
+        .command('card:delete <id>')
+        .description('Delete a card')
+        .action(card.delete.bind(card));
+
+    program
+        .command('card:move <id> <list>')
+        .description('Move a card between lists')
+        .option('-b, --board [name]', 'move to a list on another board')
+        .option('-p, --position [top/bottom]', 'position of the new card', 'top')
+        .action(card.move.bind(card));
+
+    program
+        .command('card:mine')
+        .description('Show cards assigned to a user')
+        .option('-u, --user [name]', 'show for another user')
+        .action(card.mine.bind(card));
+
+    // Webhooks
+    const webhook = require("../command/webhook/index");
+    program
+        .command('webhook:add <board> <url>')
+        .description('Adds a webhook for the specified board')
+        .option('-f, --force', 'create board if it doesn\'t already exist')
+        .action(webhook.add.bind(list));
+
+    program
+        .command('webhook:delete <board> <url>')
+        .description('Adds a webhook for the specified board')
+        .option('-f, --force', 'create board if it doesn\'t already exist')
+        .action(webhook.add.bind(list));
+
+    program
+        .command('webhook:delete <id>')
+        .description('Delete a webhook')
+        .action(webhook.delete.bind(list));
+
+    program
+        .command('webhook:show')
+        .description('Show all configured webhooks')
+        .action(webhook.show.bind(list));
+
+    // Cache
+    const cache = require("../command/cache/index");
+    program
+        .command('cache:all')
+        .description('Refresh all caches')
+        .action(cache.all.bind(list));
 
     // Output help by default if there is no subcommand
     if (process.argv.slice(2).length === 0) {
