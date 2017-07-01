@@ -8,7 +8,7 @@ function main(args) {
         .option('-F, --format [format]', 'change the output format (default tsv)', 'tsv');
 
     // Boards
-    const board = require("../src/board/index");
+    const board = require("../command/board/index");
     program
         .command('board:add <board>')
         .description('Adds a new board with the specified name')
@@ -29,7 +29,7 @@ function main(args) {
         .action(board.show.bind(board));
 
     // Lists
-    const list = require("../src/list/index");
+    const list = require("../command/list/index");
     program
         .command('list:add <board> <list>')
         .description('Adds a new board with the specified name')

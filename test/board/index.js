@@ -9,7 +9,7 @@ const expect = chai.expect;
 const program = require("../../bin/trello");
 
 describe("board", function() {
-  const board = require("../../src/board/index");
+  const board = require("../../command/board/index");
 
   describe(":add", function() {
     it(
@@ -112,9 +112,7 @@ describe("board", function() {
       })
     );
 
-    [
-      ["can show closed cards", "c", "closed", true]
-    ].forEach(function(v) {
+    [["can show closed cards", "c", "closed", true]].forEach(function(v) {
       it(
         `${v[0]} (-${v[1]})`,
         sinonTest(function() {

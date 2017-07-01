@@ -5,8 +5,8 @@
   "main": "./bin/trello",
   "scripts": {
     "test": "NODE_ENV=test mocha test/* test/**/*",
-    "lint": "eslint src test",
-    "lint-fix": "eslint --fix src test"
+    "lint": "eslint src command test",
+    "lint-fix": "eslint --fix src command test"
   },
   "repository": {
     "type": "git",
