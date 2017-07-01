@@ -8,6 +8,13 @@ function main(args) {
         .option('-n, --non-interactive', 'do not prompt for use interaction, assume yes', false)
         .option('-F, --format [format]', 'change the output format (default tsv)', 'tsv');
 
+    // Auth
+    const auth = require("../command/auth/index");
+    program
+        .command('auth:set <token>')
+        .description('Set auth token')
+        .action(auth.set.bind(auth));
+
     // Boards
     const board = require("../command/board/index");
     program
