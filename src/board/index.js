@@ -1,3 +1,5 @@
 module.exports = {
-  add: require("./add")
+  add: require("./add"),
+  close: require("./close"),
+  show: require("./show")
 };

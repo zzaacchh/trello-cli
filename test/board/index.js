@@ -9,9 +9,9 @@ const expect = chai.expect;
 const program = require("../../bin/trello");
 
 describe("board", function() {
-  describe(":add", function() {
-    const board = require("../../src/board/index");
+  const board = require("../../src/board/index");
 
+  describe(":add", function() {
     it(
       "should pass through the board name",
       sinonTest(function() {
@@ -64,6 +64,45 @@ describe("board", function() {
         })
       );
     });
+  });
+
+  describe(":close", function() {
+    it(
+      "should pass through the board name",
+      sinonTest(function() {
+        const stub = this.stub(board, "close");
+        execute(["board:close", "fiora"]);
+
+        const args = stub.args[0];
+        expect(stub).to.have.been.calledOnce;
+        expect(args[0]).to.equal("fiora");
+      })
+    );
+  });
+
+  describe(":show", function() {
+    it(
+      "should pass through the search term",
+      sinonTest(function() {
+        const stub = this.stub(board, "show");
+        execute(["board:show", "fiora"]);
+
+        const args = stub.args[0];
+        expect(stub).to.have.been.calledOnce;
+        expect(args[0]).to.equal("fiora");
+      })
+    );
+
+    it(
+      "has sane defaults",
+      sinonTest(function() {
+        const stub = this.stub(board, "show");
+        execute(["board:show", "something"]);
+
+        const args = stub.args[0];
+        expect(args[1].closed).to.equal("off");
+      })
+    );
   });
 });
 
