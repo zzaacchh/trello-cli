@@ -7,25 +7,43 @@ function main(args) {
         .version('0.5.0')
         .option('-F, --format [format]', 'change the output format (default tsv)', 'tsv');
 
+    // Boards
     const board = require("../src/board/index");
     program
-        .command('board:add <name>')
+        .command('board:add <board>')
         .description('Adds a new board with the specified name')
         .option('-d, --description [desc]', 'the description of the board', null)
-        .option('-a, --ageing [on/off]', 'enable card aging', "off")
-        .option('-i, --images [on/off]', 'show images on cards', "on")
+        .option('-a, --ageing', 'enable card aging')
+        .option('-i, --no-images', 'disable images on cards', false)
         .action(board.add.bind(board));
 
     program
-        .command('board:close <name>')
+        .command('board:close <board>')
         .description('Close all boards that match the specified text')
         .action(board.close.bind(board));
 
     program
-        .command('board:show <name>')
+        .command('board:show <board>')
         .description('Show the list of cached boards')
-        .option('-c, --closed [on/off]', 'show closed boards', "off")
+        .option('-c, --closed', 'show closed boards')
         .action(board.show.bind(board));
+
+    // Lists
+    const list = require("../src/list/index");
+    program
+        .command('list:add <board> <list>')
+        .description('Adds a new board with the specified name')
+        .option('-p, --position [top/bottom]', 'position of the new list', 'top')
+        .option('-f, --force', 'create board if it doesn\'t already exist')
+        .action(list.add.bind(board));
+
+    program
+        .command('list:show <board> <list>')
+        .description('Show the list of cached boards')
+        .option('-c, --closed', 'show closed boards')
+        .action(list.show.bind(board));
+
+
 
     // Output help by default if there is no subcommand
     if (process.argv.slice(2).length === 0) {
