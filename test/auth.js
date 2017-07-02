@@ -16,7 +16,7 @@ describe("auth", function() {
       sinonTest(function() {
         const writeConfigStub = this.stub(config, "writeConfigValue");
         const authTokenStub = this.stub(config, "ensureAuthTokenSet");
-          authTokenStub.throws(new Error("Please set auth token"));
+        authTokenStub.throws(new Error("Please set auth token"));
         const consoleStub = this.stub(console, "log");
 
         auth.setClient("client_id");
