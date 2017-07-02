@@ -159,10 +159,8 @@ describe("config", function() {
         dirExistsStub.returns(false);
 
         let createConfigStub = this.stub(config, "createDefaultConfig");
-
-        expect(() => config.ensureConfigExists()).to.throw(
-          "Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in /home/myuser/.trello-cli/config.json"
-        );
+        config.ensureConfigExists();
+        expect(createConfigStub).to.have.been.calledOnce;
       })
     );
   });
@@ -184,7 +182,7 @@ describe("config", function() {
         readFileStub.returns({ auth: {} });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please run `trello auth:set-client <id>`"
+          "Please fetch an application key from https://trello.com/app-key and run `trello auth:set-client <id>"
         );
       })
     );
@@ -195,7 +193,7 @@ describe("config", function() {
         readFileStub.returns({ auth: {} });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please run `trello auth:set-client <id>`"
+          "Please fetch an application key from https://trello.com/app-key and run `trello auth:set-client <id>"
         );
       })
     );
@@ -206,7 +204,7 @@ describe("config", function() {
         readFileStub.returns({ auth: { clientId: "" } });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please run `trello auth:set-client <id>`"
+          "Please fetch an application key from https://trello.com/app-key and run `trello auth:set-client <id>"
         );
       })
     );
@@ -217,7 +215,7 @@ describe("config", function() {
         readFileStub.returns({ auth: { clientId: "YOURAPIKEY" } });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please run `trello auth:set-client <id>`"
+          "Please fetch an application key from https://trello.com/app-key and run `trello auth:set-client <id>"
         );
       })
     );

@@ -42,10 +42,6 @@ Config.prototype.createDefaultConfig = function() {
 Config.prototype.ensureConfigExists = function() {
   if (!this.configDirExists()) {
     this.createDefaultConfig();
-    throw new Error(
-      "Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in " +
-        this.getConfigFilePath()
-    );
   }
 };
 
@@ -56,7 +52,9 @@ Config.prototype.ensureApplicationIdSet = function() {
     !config.auth.clientId ||
     config.auth.clientId === "YOURAPIKEY"
   ) {
-    throw new Error("Please run `trello auth:set-client <id>`");
+    throw new Error(
+      "Please fetch an application key from https://trello.com/app-key and run `trello auth:set-client <id>`"
+    );
   }
 };
 
