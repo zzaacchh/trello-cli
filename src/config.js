@@ -30,7 +30,7 @@ Config.prototype.createDefaultConfig = function() {
   }
 
   var template = {
-    appKey: "YOURAPIKEY"
+    clientId: "YOURAPIKEY"
   };
   fs.writeFileSync(this.getConfigFilePath(), JSON.stringify(template, null, 4));
 };
@@ -38,7 +38,19 @@ Config.prototype.createDefaultConfig = function() {
 Config.prototype.ensureConfigExists = function() {
   if (!this.configDirExists()) {
     this.createDefaultConfig();
+      throw new Error(
+          "Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in " + this.getConfigFilePath()
+      );
   }
+};
+
+Config.prototype.ensureApplicationIdSet = function() {
+    const config = JSON.parse(fs.readFileSync(this.getConfigFilePath()));
+    if (!config.clientId || config.clientId === "YOURAPIKEY") {
+        throw new Error(
+            "Please set clientId in " + this.getConfigFilePath()
+        );
+    }
 };
 
 module.exports = new Config();

@@ -129,7 +129,7 @@ describe("config", function() {
         expect(writeFileStub).to.have.been.calledOnce;
         expect(args[0]).to.equal("/home/myuser/.trello-cli/config.json");
         expect(args[1]).to.equal(
-          JSON.stringify({ appKey: "YOURAPIKEY" }, null, 4)
+          JSON.stringify({ clientId: "YOURAPIKEY" }, null, 4)
         );
       })
     );
@@ -155,8 +155,47 @@ describe("config", function() {
         dirExistsStub.returns(false);
 
         let createConfigStub = this.stub(config, "createDefaultConfig");
-        config.ensureConfigExists();
-        expect(createConfigStub).to.have.been.calledOnce;
+
+        expect(() => config.ensureConfigExists()).to.throw("Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in /home/myuser/.trello-cli/config.json");
+      })
+    );
+  });
+
+  describe("#ensureApplicationIdSet", function() {
+    it(
+      "does not throw when clientId is set",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({"clientId": "ABC123"}));
+
+        config.ensureApplicationIdSet();
+      })
+    );
+    it(
+      "throws when clientId does not exist",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({}));
+
+        expect(() => config.ensureApplicationIdSet()).to.throw("Please set clientId in /home/myuser/.trello-cli/config.json");
+      })
+    );
+    it(
+      "throws when clientId is empty",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({"clientId": ""}));
+
+        expect(() => config.ensureApplicationIdSet()).to.throw("Please set clientId in /home/myuser/.trello-cli/config.json");
+      })
+    );
+    it(
+      "throws when clientId has not been changed",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({"clientId": "YOURAPIKEY"}));
+
+        expect(() => config.ensureApplicationIdSet()).to.throw("Please set clientId in /home/myuser/.trello-cli/config.json");
       })
     );
   });
