@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
-const program = require("../../../bin/trello");
+const utils = require("../../../test/utils");
 
 describe("command#card", function() {
   const card = require("../../../command/card/index");
@@ -16,7 +16,7 @@ describe("command#card", function() {
       "should pass through the board, list and card name",
       sinonTest(function() {
         const stub = this.stub(card, "add");
-        execute(["card:add", "fiora", "garen", "cleaver"]);
+        utils.execute(this, ["card:add", "fiora", "garen", "cleaver"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -30,7 +30,7 @@ describe("command#card", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(card, "add");
-        execute(["card:add", "something", "name", "title"]);
+        utils.execute(this, ["card:add", "something", "name", "title"]);
 
         const args = stub.args[0];
         expect(args[3].description).to.equal(null);
@@ -54,7 +54,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[3][v[2]]).to.equal(v[3]);
@@ -69,7 +69,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[3][v[2]]).to.equal(v[3]);
@@ -83,7 +83,7 @@ describe("command#card", function() {
       "should pass through the board and list name",
       sinonTest(function() {
         const stub = this.stub(card, "show");
-        execute(["card:show", "fiora", "garen"]);
+        utils.execute(this, ["card:show", "fiora", "garen"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -98,7 +98,7 @@ describe("command#card", function() {
       "should pass through the board, from and to fields",
       sinonTest(function() {
         const stub = this.stub(card, "moveAll");
-        execute(["card:move-all", "fiora", "from", "to"]);
+        utils.execute(this, ["card:move-all", "fiora", "from", "to"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -112,7 +112,7 @@ describe("command#card", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(card, "moveAll");
-        execute(["card:move-all", "something", "name", "title"]);
+        utils.execute(this, ["card:move-all", "something", "name", "title"]);
 
         const args = stub.args[0];
         expect(args[3].board).to.equal(null);
@@ -128,7 +128,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[3][v[2]]).to.equal(v[3]);
@@ -143,7 +143,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[3][v[2]]).to.equal(v[3]);
@@ -157,7 +157,7 @@ describe("command#card", function() {
       "should pass through the id",
       sinonTest(function() {
         const stub = this.stub(card, "archive");
-        execute(["card:archive", "ABC123"]);
+        utils.execute(this, ["card:archive", "ABC123"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -171,7 +171,7 @@ describe("command#card", function() {
       "should pass through the id and user",
       sinonTest(function() {
         const stub = this.stub(card, "assign");
-        execute(["card:assign", "ABC123", "1234"]);
+        utils.execute(this, ["card:assign", "ABC123", "1234"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -186,7 +186,7 @@ describe("command#card", function() {
       "should pass through the id and user",
       sinonTest(function() {
         const stub = this.stub(card, "unassign");
-        execute(["card:unassign", "ABC123", "1234"]);
+        utils.execute(this, ["card:unassign", "ABC123", "1234"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -201,7 +201,7 @@ describe("command#card", function() {
       "should pass through the id",
       sinonTest(function() {
         const stub = this.stub(card, "details");
-        execute(["card:details", "ABC123"]);
+        utils.execute(this, ["card:details", "ABC123"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -215,7 +215,7 @@ describe("command#card", function() {
       "should pass through the id",
       sinonTest(function() {
         const stub = this.stub(card, "delete");
-        execute(["card:delete", "ABC123"]);
+        utils.execute(this, ["card:delete", "ABC123"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -229,7 +229,7 @@ describe("command#card", function() {
       "should pass through the ID and to fields",
       sinonTest(function() {
         const stub = this.stub(card, "move");
-        execute(["card:move", "ABC123", "to"]);
+        utils.execute(this, ["card:move", "ABC123", "to"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -242,7 +242,7 @@ describe("command#card", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(card, "move");
-        execute(["card:move", "something", "name", "title"]);
+        utils.execute(this, ["card:move", "something", "name", "title"]);
 
         const args = stub.args[0];
         expect(args[2].board).to.equal(null);
@@ -262,7 +262,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[2][v[2]]).to.equal(v[3]);
@@ -277,7 +277,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[2][v[2]]).to.equal(v[3]);
@@ -291,7 +291,7 @@ describe("command#card", function() {
       "should call the correct method",
       sinonTest(function() {
         const stub = this.stub(card, "mine");
-        execute(["card:mine"]);
+        utils.execute(this, ["card:mine"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -302,7 +302,7 @@ describe("command#card", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(card, "mine");
-        execute(["card:mine"]);
+        utils.execute(this, ["card:mine"]);
 
         const args = stub.args[0];
         expect(args[0].user).to.equal(null);
@@ -318,7 +318,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[0][v[2]]).to.equal(v[3]);
@@ -333,7 +333,7 @@ describe("command#card", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[0][v[2]]).to.equal(v[3]);
@@ -342,8 +342,3 @@ describe("command#card", function() {
     });
   });
 });
-
-function execute(args) {
-  args.unshift("node", "trello");
-  program(args);
-}

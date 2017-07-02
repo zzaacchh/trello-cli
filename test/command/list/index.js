@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
-const program = require("../../../bin/trello");
+const utils = require("../../../test/utils");
 
 describe("command#list", function() {
   const list = require("../../../command/list/index");
@@ -16,7 +16,7 @@ describe("command#list", function() {
       "should pass through the board and list name",
       sinonTest(function() {
         const stub = this.stub(list, "add");
-        execute(["list:add", "fiora", "garen"]);
+        utils.execute(this, ["list:add", "fiora", "garen"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -29,7 +29,7 @@ describe("command#list", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(list, "add");
-        execute(["list:add", "something", "name"]);
+        utils.execute(this, ["list:add", "something", "name"]);
 
         const args = stub.args[0];
         expect(args[2].position).to.equal("top");
@@ -49,7 +49,7 @@ describe("command#list", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[2][v[2]]).to.equal(v[3]);
@@ -64,7 +64,7 @@ describe("command#list", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[2][v[2]]).to.equal(v[3]);
@@ -78,7 +78,7 @@ describe("command#list", function() {
       "should pass through the board name",
       sinonTest(function() {
         const stub = this.stub(list, "show");
-        execute(["list:show", "fiora"]);
+        utils.execute(this, ["list:show", "fiora"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -87,8 +87,3 @@ describe("command#list", function() {
     );
   });
 });
-
-function execute(args) {
-  args.unshift("node", "trello");
-  program(args);
-}

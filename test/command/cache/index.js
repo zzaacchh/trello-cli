@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
-const program = require("../../../bin/trello");
+const utils = require("../../../test/utils");
 
 describe("command#cache", function() {
   const cache = require("../../../command/cache/index");
@@ -16,7 +16,7 @@ describe("command#cache", function() {
       "should call cache.all with no parameters",
       sinonTest(function() {
         const stub = this.stub(cache, "all");
-        execute(["cache:all"]);
+        utils.execute(this, ["cache:all"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -29,7 +29,7 @@ describe("command#cache", function() {
       "should call cache.org with no parameters",
       sinonTest(function() {
         const stub = this.stub(cache, "org");
-        execute(["cache:org"]);
+        utils.execute(this, ["cache:org"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -37,8 +37,3 @@ describe("command#cache", function() {
     );
   });
 });
-
-function execute(args) {
-  args.unshift("node", "trello");
-  program(args);
-}

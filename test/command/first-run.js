@@ -14,6 +14,8 @@ describe("command#first-run", function() {
     it(
       "should ensure the config folder exists",
       sinonTest(function() {
+        this.stub(config, "ensureApplicationIdSet");
+        this.stub(config, "ensureAuthTokenSet");
         let ensureExistsStub = this.stub(config, "ensureConfigExists");
         execute(["invalid:command"]);
         expect(ensureExistsStub).to.have.been.calledOnce;
@@ -33,6 +35,7 @@ describe("command#first-run", function() {
     it(
       "should make sure client ID is set",
       sinonTest(function() {
+        this.stub(config, "ensureAuthTokenSet");
         let ensureAppIdSetStub = this.stub(config, "ensureApplicationIdSet");
         execute(["invalid:command"]);
         expect(ensureAppIdSetStub).to.have.been.calledOnce;
@@ -41,6 +44,7 @@ describe("command#first-run", function() {
     it(
       "should error if the client ID is not set",
       sinonTest(function() {
+        this.stub(config, "ensureAuthTokenSet");
         let ensureAppIdSetStub = this.stub(config, "ensureApplicationIdSet");
         ensureAppIdSetStub.throws("Client ID not set");
         expect(() => execute(["invalid:command"])).to.throw;
@@ -61,6 +65,7 @@ describe("command#first-run", function() {
     it(
       "should make sure auth token is set",
       sinonTest(function() {
+        this.stub(config, "ensureApplicationIdSet");
         let ensureAuthTokenSetStub = this.stub(config, "ensureAuthTokenSet");
         execute(["invalid:command"]);
         expect(ensureAuthTokenSetStub).to.have.been.calledOnce;
@@ -69,6 +74,7 @@ describe("command#first-run", function() {
     it(
       "should error if the auth token is not set",
       sinonTest(function() {
+        this.stub(config, "ensureApplicationIdSet");
         let ensureAppIdSetStub = this.stub(config, "ensureAuthTokenSet");
         ensureAppIdSetStub.throws("Auth token not set");
         expect(() => execute(["invalid:command"])).to.throw;

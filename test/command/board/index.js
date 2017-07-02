@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
-const program = require("../../../bin/trello");
+const utils = require("../../../test/utils");
 
 describe("command#board", function() {
   const board = require("../../../command/board/index");
@@ -16,7 +16,7 @@ describe("command#board", function() {
       "should pass through the board name",
       sinonTest(function() {
         const stub = this.stub(board, "add");
-        execute(["board:add", "fiora"]);
+        utils.execute(this, ["board:add", "fiora"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -28,7 +28,7 @@ describe("command#board", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(board, "add");
-        execute(["board:add", "something"]);
+        utils.execute(this, ["board:add", "something"]);
 
         const args = stub.args[0];
         expect(args[1].description).to.equal(null);
@@ -50,7 +50,7 @@ describe("command#board", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[1][v[2]]).to.equal(v[3]);
@@ -65,7 +65,7 @@ describe("command#board", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[1][v[2]]).to.equal(v[3]);
@@ -79,7 +79,7 @@ describe("command#board", function() {
       "should pass through the board name",
       sinonTest(function() {
         const stub = this.stub(board, "close");
-        execute(["board:close", "fiora"]);
+        utils.execute(this, ["board:close", "fiora"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -93,7 +93,7 @@ describe("command#board", function() {
       "should pass through the search term",
       sinonTest(function() {
         const stub = this.stub(board, "show");
-        execute(["board:show", "fiora"]);
+        utils.execute(this, ["board:show", "fiora"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -105,7 +105,7 @@ describe("command#board", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(board, "show");
-        execute(["board:show", "something"]);
+        utils.execute(this, ["board:show", "something"]);
 
         const args = stub.args[0];
         expect(args[1].closed).to.equal(undefined);
@@ -121,7 +121,7 @@ describe("command#board", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[1][v[2]]).to.equal(v[3]);
@@ -136,7 +136,7 @@ describe("command#board", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[1][v[2]]).to.equal(v[3]);
@@ -150,7 +150,7 @@ describe("command#board", function() {
       "should pass through the board name",
       sinonTest(function() {
         const stub = this.stub(board, "labels");
-        execute(["board:labels", "fiora"]);
+        utils.execute(this, ["board:labels", "fiora"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -162,7 +162,7 @@ describe("command#board", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(board, "labels");
-        execute(["board:labels", "something"]);
+        utils.execute(this, ["board:labels", "something"]);
 
         const args = stub.args[0];
         expect(args[1].count).to.equal(undefined);
@@ -178,7 +178,7 @@ describe("command#board", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[1][v[2]]).to.equal(v[3]);
@@ -193,7 +193,7 @@ describe("command#board", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[1][v[2]]).to.equal(v[3]);
@@ -202,8 +202,3 @@ describe("command#board", function() {
     });
   });
 });
-
-function execute(args) {
-  args.unshift("node", "trello");
-  program(args);
-}

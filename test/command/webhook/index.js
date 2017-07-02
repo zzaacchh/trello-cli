@@ -6,7 +6,7 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
-const program = require("../../../bin/trello");
+const utils = require("../../../test/utils");
 
 describe("command#webhook", function() {
   const webhook = require("../../../command/webhook/index");
@@ -16,7 +16,11 @@ describe("command#webhook", function() {
       "should pass through the board and webhook name",
       sinonTest(function() {
         const stub = this.stub(webhook, "add");
-        execute(["webhook:add", "fiora", "https://example.com/webhook"]);
+        utils.execute(this, [
+          "webhook:add",
+          "fiora",
+          "https://example.com/webhook"
+        ]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -29,7 +33,11 @@ describe("command#webhook", function() {
       "has sane defaults",
       sinonTest(function() {
         const stub = this.stub(webhook, "add");
-        execute(["webhook:add", "fiora", "https://example.com/webhook"]);
+        utils.execute(this, [
+          "webhook:add",
+          "fiora",
+          "https://example.com/webhook"
+        ]);
 
         const args = stub.args[0];
         expect(args[2].force).to.equal(undefined);
@@ -50,7 +58,7 @@ describe("command#webhook", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[2][v[2]]).to.equal(v[3]);
@@ -70,7 +78,7 @@ describe("command#webhook", function() {
           if (v[3]) {
             command.push(v[3]);
           }
-          execute(command);
+          utils.execute(this, command);
 
           const args = stub.args[0];
           expect(args[2][v[2]]).to.equal(v[3]);
@@ -84,7 +92,7 @@ describe("command#webhook", function() {
       "should pass through the webhook ID",
       sinonTest(function() {
         const stub = this.stub(webhook, "delete");
-        execute(["webhook:delete", "webhook123"]);
+        utils.execute(this, ["webhook:delete", "webhook123"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -98,7 +106,7 @@ describe("command#webhook", function() {
       "should should call webhook:show with no arguments",
       sinonTest(function() {
         const stub = this.stub(webhook, "show");
-        execute(["webhook:show"]);
+        utils.execute(this, ["webhook:show"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;
@@ -106,8 +114,3 @@ describe("command#webhook", function() {
     );
   });
 });
-
-function execute(args) {
-  args.unshift("node", "trello");
-  program(args);
-}
