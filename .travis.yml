@@ -1,7 +1,10 @@
 language: node_js
 node_js:
-  - "7.6"
-  - "6.9.4" # LTS
+  - "8.1"
+  - "8.0"
+  - "7"
+  - "6" # LTS
+  - "6.9.4" # Minimum
 script:
   - npm test
   - npm run lint
