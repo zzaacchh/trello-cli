@@ -129,7 +129,11 @@ describe("config", function() {
         expect(writeFileStub).to.have.been.calledOnce;
         expect(args[0]).to.equal("/home/myuser/.trello-cli/config.json");
         expect(args[1]).to.equal(
-          JSON.stringify({ clientId: "YOURAPIKEY" }, null, 4)
+          JSON.stringify(
+            { auth: { clientId: "YOURAPIKEY", token: "AUTHTOKEN" } },
+            null,
+            4
+          )
         );
       })
     );
@@ -165,44 +169,113 @@ describe("config", function() {
 
   describe("#ensureApplicationIdSet", function() {
     it(
-      "does not throw when clientId is set",
+      "does not throw when auth.clientId is set",
       sinonTest(function() {
         let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ clientId: "ABC123" }));
+        readFileStub.returns(JSON.stringify({ auth: { clientId: "ABC123" } }));
 
         config.ensureApplicationIdSet();
       })
     );
     it(
-      "throws when clientId does not exist",
+      "throws when auth does not exist",
       sinonTest(function() {
         let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({}));
+        readFileStub.returns(JSON.stringify({ auth: {} }));
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please set clientId in /home/myuser/.trello-cli/config.json"
+          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
         );
       })
     );
     it(
-      "throws when clientId is empty",
+      "throws when auth.clientId does not exist",
       sinonTest(function() {
         let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ clientId: "" }));
+        readFileStub.returns(JSON.stringify({ auth: {} }));
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please set clientId in /home/myuser/.trello-cli/config.json"
+          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
         );
       })
     );
     it(
-      "throws when clientId has not been changed",
+      "throws when auth.clientId is empty",
       sinonTest(function() {
         let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ clientId: "YOURAPIKEY" }));
+        readFileStub.returns(JSON.stringify({ auth: { clientId: "" } }));
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please set clientId in /home/myuser/.trello-cli/config.json"
+          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
+        );
+      })
+    );
+    it(
+      "throws when auth.clientId has not been changed",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(
+          JSON.stringify({ auth: { clientId: "YOURAPIKEY" } })
+        );
+
+        expect(() => config.ensureApplicationIdSet()).to.throw(
+          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
+        );
+      })
+    );
+  });
+
+  describe("#ensureAuthTokenSet", function() {
+    it(
+      "does not throw when auth.token is set",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({ auth: { token: "demo_token" } }));
+
+        config.ensureAuthTokenSet();
+      })
+    );
+    it(
+      "throws when auth does not exist",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({ auth: {} }));
+
+        expect(() => config.ensureAuthTokenSet()).to.throw(
+          "Please set auth.token in /home/myuser/.trello-cli/config.json"
+        );
+      })
+    );
+    it(
+      "throws when auth.token does not exist",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({ auth: {} }));
+
+        expect(() => config.ensureAuthTokenSet()).to.throw(
+          "Please set auth.token in /home/myuser/.trello-cli/config.json"
+        );
+      })
+    );
+    it(
+      "throws when auth.token is empty",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({ auth: { token: "" } }));
+
+        expect(() => config.ensureAuthTokenSet()).to.throw(
+          "Please set auth.token in /home/myuser/.trello-cli/config.json"
+        );
+      })
+    );
+    it(
+      "throws when auth.token has not been changed",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({ auth: { token: "AUTHTOKEN" } }));
+
+        expect(() => config.ensureAuthTokenSet()).to.throw(
+          "Please set auth.token in /home/myuser/.trello-cli/config.json"
         );
       })
     );

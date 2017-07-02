@@ -30,7 +30,10 @@ Config.prototype.createDefaultConfig = function() {
   }
 
   var template = {
-    clientId: "YOURAPIKEY"
+    auth: {
+      clientId: "YOURAPIKEY",
+      token: "AUTHTOKEN"
+    }
   };
   fs.writeFileSync(this.getConfigFilePath(), JSON.stringify(template, null, 4));
 };
@@ -47,8 +50,19 @@ Config.prototype.ensureConfigExists = function() {
 
 Config.prototype.ensureApplicationIdSet = function() {
   const config = JSON.parse(fs.readFileSync(this.getConfigFilePath()));
-  if (!config.clientId || config.clientId === "YOURAPIKEY") {
-    throw new Error("Please set clientId in " + this.getConfigFilePath());
+  if (
+    !config.auth ||
+    !config.auth.clientId ||
+    config.auth.clientId === "YOURAPIKEY"
+  ) {
+    throw new Error("Please set auth.clientId in " + this.getConfigFilePath());
+  }
+};
+
+Config.prototype.ensureAuthTokenSet = function() {
+  const config = JSON.parse(fs.readFileSync(this.getConfigFilePath()));
+  if (!config.auth || !config.auth.token || config.auth.token === "AUTHTOKEN") {
+    throw new Error("Please set auth.token in " + this.getConfigFilePath());
   }
 };
 

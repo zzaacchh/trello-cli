@@ -1,3 +1,4 @@
 module.exports = {
-  set: require("./set")
+  setClient: require("./set-client"),
+  setToken: require("./set-token")
 };
