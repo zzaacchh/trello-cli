@@ -222,11 +222,19 @@ describe("config", function() {
   });
 
   describe("#ensureAuthTokenSet", function() {
+    let authenticationUrl =
+      "https://trello.com/1/connect?key=TEST_CLIENT_ID&name=trello-cli&response_type=token&scope=account,read,write&expiration=never";
+    const tokenError =
+      "Please get an auth token from: \n\n" +
+      authenticationUrl +
+      "\n\nNext, run `trello auth:set-token <token>`";
     it(
       "does not throw when auth.token is set",
       sinonTest(function() {
         let readFileStub = this.stub(config, "getConfig");
-        readFileStub.returns({ auth: { token: "demo_token" } });
+        readFileStub.returns({
+          auth: { clientId: "TEST_CLIENT_ID", token: "demo_token" }
+        });
 
         config.ensureAuthTokenSet();
       })
@@ -235,10 +243,10 @@ describe("config", function() {
       "throws when auth does not exist",
       sinonTest(function() {
         let readFileStub = this.stub(config, "getConfig");
-        readFileStub.returns({ auth: {} });
+        readFileStub.returns({});
 
         expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please run `trello auth:set-token <token>`"
+          "Please fetch an application key from https://trello.com/app-key and run `trello auth:set-client <id>"
         );
       })
     );
@@ -246,33 +254,31 @@ describe("config", function() {
       "throws when auth.token does not exist",
       sinonTest(function() {
         let readFileStub = this.stub(config, "getConfig");
-        readFileStub.returns({ auth: {} });
+        readFileStub.returns({ auth: { clientId: "TEST_CLIENT_ID" } });
 
-        expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please run `trello auth:set-token <token>`"
-        );
+        expect(() => config.ensureAuthTokenSet()).to.throw(tokenError);
       })
     );
     it(
       "throws when auth.token is empty",
       sinonTest(function() {
         let readFileStub = this.stub(config, "getConfig");
-        readFileStub.returns({ auth: { token: "" } });
+        readFileStub.returns({
+          auth: { clientId: "TEST_CLIENT_ID", token: "" }
+        });
 
-        expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please run `trello auth:set-token <token>`"
-        );
+        expect(() => config.ensureAuthTokenSet()).to.throw(tokenError);
       })
     );
     it(
       "throws when auth.token has not been changed",
       sinonTest(function() {
         let readFileStub = this.stub(config, "getConfig");
-        readFileStub.returns({ auth: { token: "AUTHTOKEN" } });
+        readFileStub.returns({
+          auth: { clientId: "TEST_CLIENT_ID", token: "AUTHTOKEN" }
+        });
 
-        expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please run `trello auth:set-token <token>`"
-        );
+        expect(() => config.ensureAuthTokenSet()).to.throw(tokenError);
       })
     );
   });

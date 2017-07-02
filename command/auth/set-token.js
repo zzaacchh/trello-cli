@@ -1,3 +1,5 @@
+let config = require("../../src/config");
+
 module.exports = function(token) {
-  console.log(token);
+  config.writeConfigValue("auth.token", token);
 };

@@ -60,8 +60,22 @@ Config.prototype.ensureApplicationIdSet = function() {
 
 Config.prototype.ensureAuthTokenSet = function() {
   const config = this.getConfig();
-  if (!config.auth || !config.auth.token || config.auth.token === "AUTHTOKEN") {
-    throw new Error("Please run `trello auth:set-token <token>`");
+
+  // If there's no auth section, we need to set a Client ID first
+  if (!config.auth) {
+    this.ensureApplicationIdSet();
+  }
+
+  if (!config.auth.token || config.auth.token === "AUTHTOKEN") {
+    let authenticationUrl =
+      "https://trello.com/1/connect?key=" +
+      config.auth.clientId +
+      "&name=trello-cli&response_type=token&scope=account,read,write&expiration=never";
+    throw new Error(
+      "Please get an auth token from: \n\n" +
+        authenticationUrl +
+        "\n\nNext, run `trello auth:set-token <token>`"
+    );
   }
 };
 
