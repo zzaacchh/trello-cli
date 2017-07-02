@@ -38,19 +38,18 @@ Config.prototype.createDefaultConfig = function() {
 Config.prototype.ensureConfigExists = function() {
   if (!this.configDirExists()) {
     this.createDefaultConfig();
-      throw new Error(
-          "Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in " + this.getConfigFilePath()
-      );
+    throw new Error(
+      "Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in " +
+        this.getConfigFilePath()
+    );
   }
 };
 
 Config.prototype.ensureApplicationIdSet = function() {
-    const config = JSON.parse(fs.readFileSync(this.getConfigFilePath()));
-    if (!config.clientId || config.clientId === "YOURAPIKEY") {
-        throw new Error(
-            "Please set clientId in " + this.getConfigFilePath()
-        );
-    }
+  const config = JSON.parse(fs.readFileSync(this.getConfigFilePath()));
+  if (!config.clientId || config.clientId === "YOURAPIKEY") {
+    throw new Error("Please set clientId in " + this.getConfigFilePath());
+  }
 };
 
 module.exports = new Config();

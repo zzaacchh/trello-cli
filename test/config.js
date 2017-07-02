@@ -156,7 +156,9 @@ describe("config", function() {
 
         let createConfigStub = this.stub(config, "createDefaultConfig");
 
-        expect(() => config.ensureConfigExists()).to.throw("Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in /home/myuser/.trello-cli/config.json");
+        expect(() => config.ensureConfigExists()).to.throw(
+          "Go to https://trello.com/app-key and generate the API key and replace YOURAPIKEY in /home/myuser/.trello-cli/config.json"
+        );
       })
     );
   });
@@ -166,7 +168,7 @@ describe("config", function() {
       "does not throw when clientId is set",
       sinonTest(function() {
         let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({"clientId": "ABC123"}));
+        readFileStub.returns(JSON.stringify({ clientId: "ABC123" }));
 
         config.ensureApplicationIdSet();
       })
@@ -177,25 +179,31 @@ describe("config", function() {
         let readFileStub = this.stub(fs, "readFileSync");
         readFileStub.returns(JSON.stringify({}));
 
-        expect(() => config.ensureApplicationIdSet()).to.throw("Please set clientId in /home/myuser/.trello-cli/config.json");
+        expect(() => config.ensureApplicationIdSet()).to.throw(
+          "Please set clientId in /home/myuser/.trello-cli/config.json"
+        );
       })
     );
     it(
       "throws when clientId is empty",
       sinonTest(function() {
         let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({"clientId": ""}));
+        readFileStub.returns(JSON.stringify({ clientId: "" }));
 
-        expect(() => config.ensureApplicationIdSet()).to.throw("Please set clientId in /home/myuser/.trello-cli/config.json");
+        expect(() => config.ensureApplicationIdSet()).to.throw(
+          "Please set clientId in /home/myuser/.trello-cli/config.json"
+        );
       })
     );
     it(
       "throws when clientId has not been changed",
       sinonTest(function() {
         let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({"clientId": "YOURAPIKEY"}));
+        readFileStub.returns(JSON.stringify({ clientId: "YOURAPIKEY" }));
 
-        expect(() => config.ensureApplicationIdSet()).to.throw("Please set clientId in /home/myuser/.trello-cli/config.json");
+        expect(() => config.ensureApplicationIdSet()).to.throw(
+          "Please set clientId in /home/myuser/.trello-cli/config.json"
+        );
       })
     );
   });
