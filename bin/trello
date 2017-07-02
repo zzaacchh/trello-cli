@@ -141,6 +141,11 @@ function main(args) {
         .description('Refresh all caches')
         .action(cache.all.bind(list));
 
+    program
+        .command('cache:org')
+        .description('Refresh org cache')
+        .action(cache.org.bind(list));
+
     // Output help by default if there is no subcommand
     if (process.argv.slice(2).length === 0) {
         program.outputHelp();

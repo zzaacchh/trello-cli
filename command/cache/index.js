@@ -1,3 +1,4 @@
 module.exports = {
-  all: require("./all")
+  all: require("./all"),
+  org: require("./org")
 };

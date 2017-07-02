@@ -6,10 +6,10 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
-const program = require("../../bin/trello");
+const program = require("../../../bin/trello");
 
-describe("cache", function() {
-  const cache = require("../../command/cache/index");
+describe("command#cache", function() {
+  const cache = require("../../../command/cache/index");
 
   describe(":all", function() {
     it(
@@ -17,6 +17,19 @@ describe("cache", function() {
       sinonTest(function() {
         const stub = this.stub(cache, "all");
         execute(["cache:all"]);
+
+        const args = stub.args[0];
+        expect(stub).to.have.been.calledOnce;
+      })
+    );
+  });
+
+  describe(":org", function() {
+    it(
+      "should call cache.org with no parameters",
+      sinonTest(function() {
+        const stub = this.stub(cache, "org");
+        execute(["cache:org"]);
 
         const args = stub.args[0];
         expect(stub).to.have.been.calledOnce;

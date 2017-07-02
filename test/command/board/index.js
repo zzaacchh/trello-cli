@@ -6,10 +6,10 @@ const sinonChai = require("sinon-chai");
 chai.use(sinonChai);
 
 const expect = chai.expect;
-const program = require("../../bin/trello");
+const program = require("../../../bin/trello");
 
-describe("board", function() {
-  const board = require("../../command/board/index");
+describe("command#board", function() {
+  const board = require("../../../command/board/index");
 
   describe(":add", function() {
     it(
