@@ -1,8 +1,18 @@
 #!/usr/bin/env node
 
 const program = require('commander');
+const config = require('../src/config');
 
 function main(args) {
+
+    // Ensure the config files exists
+    try {
+    config.ensureConfigExists();
+    } catch (e) {
+        console.log(e.message);
+        process.exit(1);
+    }
+
     program
         .version('0.5.0')
         .option('-n, --non-interactive', 'do not prompt for use interaction, assume yes', false)

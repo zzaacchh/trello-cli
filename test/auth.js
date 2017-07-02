@@ -7,10 +7,10 @@ chai.use(sinonChai);
 
 const expect = chai.expect;
 
-describe("cache", function() {
+describe("auth", function() {
   const cache = require("../src/cache");
 
-  describe("#org", function() {
+  describe("#check", function() {
     it(
       "should call console.log",
       sinonTest(function() {
