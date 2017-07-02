@@ -1,3 +1,4 @@
+let _ = require("lodash");
 let fs = require("fs");
 let path = require("path");
 
@@ -49,21 +50,38 @@ Config.prototype.ensureConfigExists = function() {
 };
 
 Config.prototype.ensureApplicationIdSet = function() {
-  const config = JSON.parse(fs.readFileSync(this.getConfigFilePath()));
+  const config = this.getConfig();
   if (
     !config.auth ||
     !config.auth.clientId ||
     config.auth.clientId === "YOURAPIKEY"
   ) {
-    throw new Error("Please set auth.clientId in " + this.getConfigFilePath());
+    throw new Error("Please run `trello auth:set-client <id>`");
   }
 };
 
 Config.prototype.ensureAuthTokenSet = function() {
-  const config = JSON.parse(fs.readFileSync(this.getConfigFilePath()));
+  const config = this.getConfig();
   if (!config.auth || !config.auth.token || config.auth.token === "AUTHTOKEN") {
-    throw new Error("Please set auth.token in " + this.getConfigFilePath());
+    throw new Error("Please run `trello auth:set-token <token>`");
   }
+};
+
+Config.prototype.getConfig = function() {
+  return JSON.parse(fs.readFileSync(this.getConfigFilePath()));
+};
+
+Config.prototype.writeConfig = function(value) {
+  return fs.writeFileSync(
+    this.getConfigFilePath(),
+    JSON.stringify(value, null, 4)
+  );
+};
+
+Config.prototype.writeConfigValue = function(path, value) {
+  let config = this.getConfig();
+  config = _.set(config, path, value);
+  this.writeConfig(config);
 };
 
 module.exports = new Config();

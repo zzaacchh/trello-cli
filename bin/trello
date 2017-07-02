@@ -17,7 +17,7 @@ function main(args) {
 
         // Don't check if the client ID is set if args[2] is auth:set-client
         // or auth:set-auth, as these are the commands to set values
-        if (["auth:set-client", "auth:set-auth"].indexOf(args[2]) === -1) {
+        if (["auth:set-client", "auth:set-token"].indexOf(args[2]) === -1) {
         try {
             config.ensureApplicationIdSet();
             config.ensureAuthTokenSet();

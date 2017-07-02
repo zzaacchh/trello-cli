@@ -171,8 +171,8 @@ describe("config", function() {
     it(
       "does not throw when auth.clientId is set",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: { clientId: "ABC123" } }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: { clientId: "ABC123" } });
 
         config.ensureApplicationIdSet();
       })
@@ -180,46 +180,44 @@ describe("config", function() {
     it(
       "throws when auth does not exist",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: {} }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: {} });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-client <id>`"
         );
       })
     );
     it(
       "throws when auth.clientId does not exist",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: {} }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: {} });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-client <id>`"
         );
       })
     );
     it(
       "throws when auth.clientId is empty",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: { clientId: "" } }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: { clientId: "" } });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-client <id>`"
         );
       })
     );
     it(
       "throws when auth.clientId has not been changed",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(
-          JSON.stringify({ auth: { clientId: "YOURAPIKEY" } })
-        );
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: { clientId: "YOURAPIKEY" } });
 
         expect(() => config.ensureApplicationIdSet()).to.throw(
-          "Please set auth.clientId in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-client <id>`"
         );
       })
     );
@@ -229,8 +227,8 @@ describe("config", function() {
     it(
       "does not throw when auth.token is set",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: { token: "demo_token" } }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: { token: "demo_token" } });
 
         config.ensureAuthTokenSet();
       })
@@ -238,44 +236,95 @@ describe("config", function() {
     it(
       "throws when auth does not exist",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: {} }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: {} });
 
         expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please set auth.token in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-token <token>`"
         );
       })
     );
     it(
       "throws when auth.token does not exist",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: {} }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: {} });
 
         expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please set auth.token in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-token <token>`"
         );
       })
     );
     it(
       "throws when auth.token is empty",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: { token: "" } }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: { token: "" } });
 
         expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please set auth.token in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-token <token>`"
         );
       })
     );
     it(
       "throws when auth.token has not been changed",
       sinonTest(function() {
-        let readFileStub = this.stub(fs, "readFileSync");
-        readFileStub.returns(JSON.stringify({ auth: { token: "AUTHTOKEN" } }));
+        let readFileStub = this.stub(config, "getConfig");
+        readFileStub.returns({ auth: { token: "AUTHTOKEN" } });
 
         expect(() => config.ensureAuthTokenSet()).to.throw(
-          "Please set auth.token in /home/myuser/.trello-cli/config.json"
+          "Please run `trello auth:set-token <token>`"
+        );
+      })
+    );
+  });
+  describe("#getConfig", function() {
+    it(
+      "returns the config",
+      sinonTest(function() {
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(JSON.stringify({ demo: "test" }));
+
+        expect(config.getConfig()).to.eql({ demo: "test" });
+      })
+    );
+  });
+
+  describe("#setConfig", function() {
+    it(
+      "writes an entire config",
+      sinonTest(function() {
+        mockProcessHomeFolder();
+        let writeFileStub = this.stub(fs, "writeFileSync");
+
+        config.writeConfig({ demo: "test" });
+
+        const args = writeFileStub.args[0];
+        expect(writeFileStub).to.have.been.calledOnce;
+        expect(args[0]).to.equal("/home/myuser/.trello-cli/config.json");
+        expect(args[1]).to.equal(JSON.stringify({ demo: "test" }, null, 4));
+      })
+    );
+  });
+  describe("#writeConfigValue", function() {
+    it(
+      "overwrites a single value",
+      sinonTest(function() {
+        mockProcessHomeFolder();
+
+        let readFileStub = this.stub(fs, "readFileSync");
+        readFileStub.returns(
+          JSON.stringify({ demo: "test", foo: { bar: "bee" } })
+        );
+        let writeFileStub = this.stub(fs, "writeFileSync");
+
+        config.writeConfigValue("foo.bar", "baz");
+
+        const args = writeFileStub.args[0];
+        expect(writeFileStub).to.have.been.calledOnce;
+        expect(args[0]).to.equal("/home/myuser/.trello-cli/config.json");
+        expect(args[1]).to.equal(
+          JSON.stringify({ demo: "test", foo: { bar: "baz" } }, null, 4)
         );
       })
     );
