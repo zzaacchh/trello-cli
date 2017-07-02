@@ -125,12 +125,6 @@ function main(args) {
         .action(webhook.add.bind(list));
 
     program
-        .command('webhook:delete <board> <url>')
-        .description('Adds a webhook for the specified board')
-        .option('-f, --force', 'create board if it doesn\'t already exist')
-        .action(webhook.add.bind(list));
-
-    program
         .command('webhook:delete <id>')
         .description('Delete a webhook')
         .action(webhook.delete.bind(list));

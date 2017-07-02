@@ -144,6 +144,63 @@ describe("board", function() {
       );
     });
   });
+
+  describe(":labels", function() {
+    it(
+      "should pass through the board name",
+      sinonTest(function() {
+        const stub = this.stub(board, "labels");
+        execute(["board:labels", "fiora"]);
+
+        const args = stub.args[0];
+        expect(stub).to.have.been.calledOnce;
+        expect(args[0]).to.equal("fiora");
+      })
+    );
+
+    it(
+      "has sane defaults",
+      sinonTest(function() {
+        const stub = this.stub(board, "labels");
+        execute(["board:labels", "something"]);
+
+        const args = stub.args[0];
+        expect(args[1].count).to.equal(undefined);
+      })
+    );
+
+    [["can enable card counting", "c", "count", true]].forEach(function(v) {
+      it(
+        `${v[0]} (-${v[1]})`,
+        sinonTest(function() {
+          const stub = this.stub(board, "labels");
+          let command = ["board:labels", "test", "-" + v[1]];
+          if (v[3]) {
+            command.push(v[3]);
+          }
+          execute(command);
+
+          const args = stub.args[0];
+          expect(args[1][v[2]]).to.equal(v[3]);
+        })
+      );
+
+      it(
+        `${v[0]} (--${v[2]})`,
+        sinonTest(function() {
+          const stub = this.stub(board, "labels");
+          let command = ["board:labels", "test", "--" + v[2]];
+          if (v[3]) {
+            command.push(v[3]);
+          }
+          execute(command);
+
+          const args = stub.args[0];
+          expect(args[1][v[2]]).to.equal(v[3]);
+        })
+      );
+    });
+  });
 });
 
 function execute(args) {
