@@ -16,6 +16,7 @@ describe("auth", function() {
       sinonTest(function() {
         const writeConfigStub = this.stub(config, "writeConfigValue");
         const authTokenStub = this.stub(config, "ensureAuthTokenSet");
+          authTokenStub.throws(new Error("Please set auth token"));
         const consoleStub = this.stub(console, "log");
 
         auth.setClient("client_id");
@@ -33,9 +34,9 @@ describe("auth", function() {
         expect(writeTokenArgs[1]).to.equal("");
 
         // Then tell the user it's been written
-        const consoleArgs = consoleStub.args[0];
-        expect(consoleStub).to.have.been.calledOnce;
-        expect(consoleArgs[0]).to.equal("Client ID set");
+        expect(consoleStub).to.have.been.calledTwice;
+        expect(consoleStub.args[0][0]).to.equal("Client ID set");
+        expect(consoleStub.args[1][0]).to.equal("Please set auth token");
 
         // Finally, trigger the auth token error to tell the user
         // to generate a new token
