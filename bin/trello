@@ -9,6 +9,7 @@ function main(args) {
     // that we have an application ID set
     try {
         config.ensureConfigExists();
+        config.ensureTranslationsDirExists();
     } catch (e) {
         console.log(e.message);
         process.exit(1);
@@ -23,7 +24,6 @@ function main(args) {
         } catch(e) {
             console.log(e.message);
             process.exit(1);
-
         }
     }
 
@@ -151,29 +151,39 @@ function main(args) {
         .command('webhook:add <board> <url>')
         .description('Adds a webhook for the specified board')
         .option('-f, --force', 'create board if it doesn\'t already exist')
-        .action(webhook.add.bind(list));
+        .action(webhook.add.bind(webhook));
 
     program
         .command('webhook:delete <id>')
         .description('Delete a webhook')
-        .action(webhook.delete.bind(list));
+        .action(webhook.delete.bind(webhook));
 
     program
         .command('webhook:show')
         .description('Show all configured webhooks')
-        .action(webhook.show.bind(list));
+        .action(webhook.show.bind(webhook));
 
     // Cache
     const cache = require("../command/cache/index");
     program
         .command('cache:all')
         .description('Refresh all caches')
-        .action(cache.all.bind(list));
+        .action(cache.all.bind(cache));
+
+    program
+        .command('cache:me')
+        .description('Refresh user cache')
+        .action(cache.me.bind(cache));
 
     program
         .command('cache:org')
         .description('Refresh org cache')
-        .action(cache.org.bind(list));
+        .action(cache.org.bind(cache));
+
+    program
+        .command('cache:board')
+        .description('Refresh board cache')
+        .action(cache.board.bind(cache));
 
     // Output help by default if there is no subcommand
     if (process.argv.slice(2).length === 0) {

@@ -2,9 +2,7 @@ let _ = require("lodash");
 let fs = require("fs");
 let path = require("path");
 
-let Config = function() {
-  this.configPath;
-};
+let Config = function() {};
 
 Config.prototype.getHomePath = function() {
   return process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
@@ -12,6 +10,10 @@ Config.prototype.getHomePath = function() {
 
 Config.prototype.getConfigDir = function() {
   return path.resolve(this.getHomePath(), ".trello-cli");
+};
+
+Config.prototype.getTranslationsDir = function() {
+  return path.resolve(this.getConfigDir(), "translations");
 };
 
 Config.prototype.getConfigFilePath = function() {
@@ -42,6 +44,20 @@ Config.prototype.createDefaultConfig = function() {
 Config.prototype.ensureConfigExists = function() {
   if (!this.configDirExists()) {
     this.createDefaultConfig();
+  }
+};
+
+Config.prototype.translationsDirExists = function() {
+  return fs.existsSync(this.getTranslationsDir());
+};
+
+Config.prototype.ensureTranslationsDirExists = function() {
+  if (!this.translationsDirExists()) {
+      try {
+          fs.mkdirSync(this.getTranslationsDir(), "0700");
+      } catch (e) {
+          throw new Error("Unable to create folder: " + this.getTranslationsDir());
+      }
   }
 };
 
