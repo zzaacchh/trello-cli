@@ -19,8 +19,15 @@ var __ = function(program, output, logger, config, trello, translator) {
       var cards = {};
       for (var i in data) {
         var item = data[i];
+
+
+        var listName = translator.getList(item.idList);
+        listName = listName.slice(listName.lastIndexOf('> ') + 2);
+        listName = (listName + "                    ").slice(0,20);
+
+
         cards[item.idBoard] = cards[item.idBoard] || [];
-        cards[item.idBoard].push(item.name.replace(/\n/g, ""));
+        cards[item.idBoard].push(listName + "  https://trello.com/c/" + item.shortLink + "    " + item.name.replace(/\n/g, ""));
       }
 
       for (var j in cards) {
